@@ -6,12 +6,11 @@
 
 ---
 
-Trabalho apresentado ao curso [BI MASTER](https://ica.puc-rio.ai/bi-master) como pré-requisito para conclusão de curso e obtenção de crédito na disciplina "Projetos de Sistemas Inteligentes de Apoio à Decisão".
+Trabalho apresentado ao curso [BI MASTER](https://ica.ele.puc-rio.br/cursos/mba-bi-master/) como pré-requisito para conclusão de curso e obtenção de crédito na disciplina "Projetos de Sistemas Inteligentes de Apoio à Decisão".
 
 ---
 
 ### Resumo
-
 
 ### Abstract
 
@@ -19,22 +18,25 @@ Resumo em inglês
 
 ### 1. Introdução
 
-A Controllab é um provedor de Controle de Qualidade laboratorial, oferecendo soluções para garantir a confiabilidade dos resultados analíticos. Uma das formas de controle é a participação contínua do Ensaio de Proficiência, também conhecido como Controle Externo da Qualidade (CEQ). Esse programa permite que laboratórios avaliem seu desempenho por meio da comparação de seus resultados com os de outros participantes.
+A [Controllab ](https://controllab.com/)é um provedor de Controle de Qualidade laboratorial, oferecendo soluções para garantir a confiabilidade dos resultados analíticos. Uma das formas de controle é a participação contínua do Ensaio de Proficiência, também conhecido como Controle Externo da Qualidade (CEQ). Esse programa permite que laboratórios avaliem seu desempenho por meio da comparação de seus resultados com os de outros participantes.
 
 Nos exames quantitativos, uma das formas de obtenção do valor designado da amostra é utilizando o consenso entre os participantes. A partir dos dados reportados, estatísticas robustas (como o Algorítmo A, recomendado pela norma ISO 13528) são calculadas para cada grupo de avaliação, evitando a interferência de valores discrepantes.
 
-No entanto, um desafio crítico é a possibilidade de conluio entre laboratórios. Quando participantes ajustam intencionalmente seus resultados para ficarem próximos uns dos outros, pode gerar distorções nas avaliações, uma vez que muitos resultados iguais ou similares pode alterar significativamente o cálculo do valor designado. Esse comportamento não apenas mascara possíveis falhas nos processos internos dos laboratórios envolvidos, mas também pode impactar negativamente outros participantes que reportam seus resultados de forma legítima, já que ocorre um deslocamento da média do grupo, o que influencia os limites de aceitação.
+No entanto, um desafio crítico é a possibilidade de conluio entre laboratórios. Quando participantes ajustam intencionalmente seus resultados para ficarem próximos uns dos outros, pode gerar distorções nas avaliações, uma vez que muitos resultados iguais ou similares pode alterar significativamente o cálculo da concentração do material. Esse comportamento não apenas mascara possíveis falhas nos processos internos dos laboratórios envolvidos, mas também pode impactar negativamente outros participantes que reportam seus resultados de forma legítima, já que ocorre um deslocamento da média do grupo, o que influencia os limites de aceitação.
 
-Diante desse problema, esse projeto propõe o desenvolvimento de um algoritmo de clusterização capaz de identificar resultados sistematicamente similares entre participantes. A ideia é detectar grupos suspeitos de conluio, permitindo que tal atividade não interfira na obtenção do valor designado, o que garante garante maior confiabilidade no Ensaio de Proficiência e assegura que todos os laboratórios sejam avaliados de forma justa.
+Diante desse problema, esse projeto propõe o desenvolvimento de um algoritmo de clusterização capaz de identificar resultados sistematicamente similares entre participantes. A ideia é detectar grupos suspeitos de conluio, permitindo que tal atividade não interfira na obtenção do valor designado, o que garante maior confiabilidade no Ensaio de Proficiência e assegura que todos os laboratórios sejam avaliados de forma justa.
 
 ### 2. Modelagem
 
+O estudo de colusão deve ser feito por módulo e analito. Um módulo é definido como um conjunto de analitos comercializados pela empresa. O Ensaio de Proficiência geralmente é dividido em 4 rodadas por ano, cada  uma contendo 3 itens para análise laboratorial, totalizando 12 frascos de cada analito por ano. O objetivo desse projeto é identificar possíveis colusões entre participantes ao longo de um ano de reportes.
+
+Dado que o desafio é agrupar dados e trata-se de uma modelagem não supervisionada, optou-se por um modelo de clusterização. Os dados foram extraídos do Data Warehouse via SQL e passaram por um pré-processamento. Para que cada participante fosse representado por linha, com as colunas correspondendo aos dados imputados, os dados foram pivotados. Além disso, aplicou-se um filtro para manter apenas participantes com no mínimo 60% de participação. Os valores faltantes foram preenchidos pela média da linha, pois espera-se que participantes com resultados rotineiramente próximos apresentem médias parecidas entre si. Para normalização dos dados utilizou-se o StandardScaler.
+
+Após diversas tentativas, o DBScan demostrou ser o algortimo mais adequado para agrupar os dados. A maior dificuldade foi determinar o valor ótimo para o parâmetro EPS. Se o valor for muito alto, o algoritmo pode recomendar vários participantes em conluio, incluindo casos sem evidências suficientes. Se for muito baixo, apenas colas idênticas são encontradas. Como a verificação dos grupos em colusão exige verificação manual, analisando a natureza do ensaio, a localização geográfica dos participantes envolvidos e se são do mesmo grupo empresarial, é essencial que o modelo identifique apenas casos altamente confiáveis. Caso contrário, um volume alto de falsos positivos pode gerar demandas desnecessárias para outros setores da empresa. Observa-se que colusões geralmente são idênticas ou com pequenas variações, tipicamente de uma ou duas casas decimais.
 
 ### 3. Resultados
 
-
 ### 4. Conclusões
-
 
 ---
 
