@@ -1,6 +1,6 @@
 # Estudo de Colusão
 
-#### Aluno: Bruno Cavalcanti de Araújo Souto Santos
+#### Aluno: Bruno Cavalcanti de Souto Santos
 
 #### Orientador: Felipe Borges.
 
@@ -12,15 +12,17 @@ Trabalho apresentado ao curso [BI MASTER](https://ica.ele.puc-rio.br/cursos/mba-
 
 ### Resumo
 
+Este projeto propõe o desenvolvimento de um algoritmo de clusterização para identificação de possíveis casos de colusão no Ensaio de Proficiência laboratorial. Esta prática ocorre quando laboratórios reportam intencionalmente seus resultados de forma semelhante, o que compromete a estatística dos grupos de avaliação. Com base na extração de dados reportados em um ano cumulativo, foram realizadas tratativas no pré-processamento, e o algoritmo DBScan foi o mais eficaz para agrupar participantes suspeitos. O objetivo da detecção de conluios é trazer maior confiabilidade na obtenção do valor designado das amostras, garantindo maior robustez e justiça no processo de avaliação do Controle Externo da Qualidade.
+
 ### Abstract
 
-Resumo em inglês
+This project proposes the development of a clustering algorithm to identify potential cases of collusion in laboratory Proficiency Testing. This practice occurs when laboratories intentionally report similar results, which compromises the statistical integrity of the evaluation groups. Based on the extraction of cumulative data reported over one year, preprocessing steps were applied, and the DBScan algorithm proved to be the most effective in grouping suspicious participants. The goal of detecting collusion is to ensure greater reliability in determining the assigned value of the samples, thus providing more robustness and fairness in the External Quality Assessment process.
 
 ### 1. Introdução
 
 A [Controllab ](https://controllab.com/)é um provedor de Controle de Qualidade laboratorial, oferecendo soluções para garantir a confiabilidade dos resultados analíticos. Uma das formas de controle é a participação contínua do Ensaio de Proficiência, também conhecido como Controle Externo da Qualidade (CEQ). Esse programa permite que laboratórios avaliem seu desempenho por meio da comparação de seus resultados com os de outros participantes.
 
-Nos exames quantitativos, uma das formas de obtenção do valor designado da amostra é utilizando o consenso entre os participantes. A partir dos dados reportados, estatísticas robustas (como o Algorítmo A, recomendado pela norma ISO 13528) são calculadas para cada grupo de avaliação, evitando a interferência de valores discrepantes.
+Nos exames quantitativos, uma das formas de obtenção do valor designado da amostra é utilizando o consenso entre os participantes. A partir dos dados reportados, estatísticas são calculadas para cada grupo de avaliação, evitando a interferência de valores discrepantes.
 
 No entanto, um desafio crítico é a possibilidade de conluio entre laboratórios. Quando participantes ajustam intencionalmente seus resultados para ficarem próximos uns dos outros, pode gerar distorções nas avaliações, uma vez que muitos resultados iguais ou similares pode alterar significativamente o cálculo da concentração do material. Esse comportamento não apenas mascara possíveis falhas nos processos internos dos laboratórios envolvidos, mas também pode impactar negativamente outros participantes que reportam seus resultados de forma legítima, já que ocorre um deslocamento da média do grupo, o que influencia os limites de aceitação.
 
