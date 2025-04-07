@@ -8,19 +8,20 @@ import numpy as np
 
 class Cola:
     __min_samples = 2
-
     def __init__(self, df: pd.DataFrame):
         self.df = df
 
     def cola_identica(self) -> pd.DataFrame:
-        self.df = self.df.reset_index()
-        self.df = self.df[self.df.drop('part', axis=1).duplicated(keep=False)]
+        df = self.df.reset_index()
+        df = df[df.drop('part', axis=1).duplicated(keep=False)]
 
-        self.df = self.df.copy()
-        self.df['part'] = self.df['part'].astype(str)
+        # df = df.copy()
+        # df['part'] = df['part'].astype(str)
 
-        agregar = [i for i in self.df.columns if i not in ['part','sistema']]
-        return self.df.groupby(agregar, dropna=False)['part'].agg(lambda x: ' - '.join((x))).reset_index()
+        # agregar = [i for i in df.columns if i not in ['part','sistema']]
+        # df = df.groupby(agregar, dropna=False)['part'].agg(lambda x: ' - '.join((x))).reset_index()
+        df['identico'] = 'Sim'
+        return df
         
 
     def __get_eps(self, dados: np.ndarray) -> float:
@@ -40,11 +41,14 @@ class Cola:
         return eps
 
 
-    def aplicar_modelo(self, eps: float = None) -> dict[float, pd.DataFrame]:
+    def aplicar_modelo(self, eps: float=None) -> dict[float, pd.DataFrame]:
+        cola_identica = self.cola_identica()
         
+        df = self.df.copy()
+
         # Preenchendo vazios pela média da linha
         imputer = SimpleImputer(strategy="mean")
-        dados: np.ndarray = imputer.fit_transform(self.df.T).T
+        dados: np.ndarray = imputer.fit_transform(df.T).T
         
         # Aplicando a normalização
         norm = StandardScaler()
@@ -56,10 +60,21 @@ class Cola:
         
         model = DBSCAN(eps=eps, min_samples=self.__min_samples, n_jobs=-1).fit(dados)
 
-        self.df['cluster'] = model.labels_
+        df['cluster'] = model.labels_
+        df = df.query('cluster != -1').reset_index()
+
+        # Merge com colas identicas
+        df = df.merge(
+            cola_identica[['part','id_modulo','analito','sistema','identico']],
+            on=['part','id_modulo','analito','sistema'],
+            how='left'
+        )
+
+        df['identico'] = df['identico'].fillna('Não')
+
+        df = df.sort_values(['id_modulo','analito','cluster'])
 
         return dict(
             eps_used = eps,
-            df = self.df.query('cluster != -1').sort_values('cluster')
+            df = df
         )
-    
