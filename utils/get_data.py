@@ -21,13 +21,13 @@ class Data:
     def get_parceiros(self):
         with open(f'querys/parceiros.sql', 'r') as file:
             query = file.read()
-        return self.banco.get_table(query)
+        return self.banco.get_dim_table(query)
     
 
     def get_modulos(self):
         with open(f'querys/modulos.sql', 'r') as file:
             query = file.read()
-        return self.banco.get_table(query)
+        return self.banco.get_dim_table(query)
     
 
     def get_data(self, ano: int, id_modulo: list|None=None, analito: list|None=None):
@@ -40,4 +40,3 @@ class Data:
                 self.__data = self.banco.get_table(query, ano=ano, id_modulo=id_modulo, analito=analito)
         
         return self.__data
-        

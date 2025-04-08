@@ -41,7 +41,7 @@ class Cola:
         return eps
 
 
-    def aplicar_modelo(self, eps: float=None) -> dict[float, pd.DataFrame]:
+    def aplicar_modelo(self, eps: float=None) -> pd.DataFrame:
         cola_identica = self.cola_identica()
         
         df = self.df.copy()
@@ -61,6 +61,7 @@ class Cola:
         model = DBSCAN(eps=eps, min_samples=self.__min_samples, n_jobs=-1).fit(dados)
 
         df['cluster'] = model.labels_
+        df['eps_calculado'] = eps
         df = df.query('cluster != -1').reset_index()
 
         # Merge com colas identicas
@@ -74,7 +75,4 @@ class Cola:
 
         df = df.sort_values(['id_modulo','analito','cluster'])
 
-        return dict(
-            eps_used = eps,
-            df = df
-        )
+        return df

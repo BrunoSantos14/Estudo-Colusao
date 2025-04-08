@@ -12,7 +12,7 @@ class Banco:
         self.__database = database
         self.__host = host
         self.__user = user
-        self.__password= password
+        self.__password = password
         self._dbns = f'postgresql+psycopg2://{self.__user}:{self.__password}@{self.__host}:5432/{self.__database}'
         self.__getEngine(self._dbns)
 
@@ -41,6 +41,10 @@ class Banco:
             self.__data = pd.read_sql(sql=text(query), con=self._engine, params=params)
         return self.__data
     
+
+    def get_dim_table(self, query:str) -> pd.DataFrame:
+        return pd.read_sql(sql=text(query), con=self._engine)
+
 
     def get_table_paginated(self, query:str, page_size=10, page=1, **params) -> pd.DataFrame:
         query = query+self.__create_pagination(page_size, page)

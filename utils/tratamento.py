@@ -23,7 +23,15 @@ class PreProcessamento:
         
 
     @classmethod
+    def __excluir_full_zero(cls, df: pd.DataFrame):
+        """Excluir participantes com todos os reportes sendo 0."""
+        parts_excluir = df.groupby(['id_modulo','analito','part'], as_index=False).valor.agg('sum').query('valor==0').part.values
+        return df.loc[~df.part.isin(parts_excluir)]
+
+
+    @classmethod
     def __criar_col_item(cls, df: pd.DataFrame) -> pd.DataFrame:
+        df = df.copy(deep=True) # evitando warning
         df['envio'] = pd.to_datetime(df['envio'])
         df['ano'] = df.envio.dt.year - 2000
         df['mes'] = df.envio.dt.month
@@ -71,7 +79,12 @@ class PreProcessamento:
 
     @classmethod
     def __tratamento(cls, df: pd.DataFrame) -> pd.DataFrame:
+        df = cls.__excluir_full_zero(df)
         df = cls.__criar_col_item(df)
         df = cls.__pivotar(df)
-        return cls.__filtrar_60_resp(df)
+        df = cls.__filtrar_60_resp(df)
+        
+        # Excluir analitos com apenas 1 participante
+        df = df.groupby(['id_modulo','analito']).filter(lambda grupo: len(grupo) > 1)
+        return df
     

@@ -21,7 +21,7 @@ SELECT
         'Mon/YYYY') AS envio,
     TRIM(REPLACE(item_ensaio, '\t', '')) item_ensaio,
     sistema,
-    valor
+    COALESCE(valor, 0) valor
 FROM ep_dw.fato
 WHERE TRUE
     AND ano = :ano
@@ -30,6 +30,7 @@ WHERE TRUE
     AND metodo_calculo = 'Quantitativo Robusto'
     AND ava NOT ILIKE '%nr%'
     AND ava NOT ILIKE '%*%'
+    AND ava NOT ILIKE '%npj%'
     AND envio NOT ILIKE '%esp%'
     AND part <> 8012
     AND item_extra = 0
