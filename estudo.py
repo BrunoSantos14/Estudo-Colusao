@@ -28,8 +28,12 @@ class Estudo:
                 # Para cada analito
                 for analito in aux.analito.unique():
                     aux2 = aux[aux.analito == analito]
-                    cola = Cola(aux2.set_index(['part','id_modulo','analito','sistema']))
-                    df_cluster = cola.aplicar_modelo(eps = None)
+                    try:
+                        cola = Cola(aux2.set_index(['part','id_modulo','analito','sistema']))
+                        df_cluster = cola.aplicar_modelo(eps = None)
+                    except:
+                        print(modulo, analito)
+                        return aux2
                     lista.append(df_cluster)
 
             df_cluster = pd.concat(lista)
