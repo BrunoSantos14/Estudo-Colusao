@@ -14,26 +14,27 @@ class Estudo:
         self.df = data.get_data(ano=ano, id_modulo=id_modulo, analito=analito)
 
 
-    def run(self) -> pd.DataFrame|None:
+    def run(self):
         df = self.df.copy()
         df = PreProcessamento(df).get_data()
         
         if not df.empty:
             lista = []
-
+            erros = []
             # Para cada módulo
             for modulo in df.id_modulo.unique():
                 aux = df[df.id_modulo == modulo]
 
                 # Para cada analito
                 for analito in aux.analito.unique():
-                    aux2 = aux[aux.analito == analito]
+                    aux2 = aux[aux.analito == analito].dropna(how='all', axis=1)
+                    cola = Cola(aux2.set_index(['part','id_modulo','analito','sistema']))
                     try:
-                        cola = Cola(aux2.set_index(['part','id_modulo','analito','sistema']))
                         df_cluster = cola.aplicar_modelo(eps = None)
-                    except:
-                        print(modulo, analito)
-                        return aux2
+                    except Exception as e:
+                        erros.append((modulo, analito, e))
+                        df_cluster = cola.aplicar_modelo(eps = 0.01)
+
                     lista.append(df_cluster)
 
             df_cluster = pd.concat(lista)
@@ -52,4 +53,4 @@ class Estudo:
             on = 'id_modulo'
         )
 
-        return df_cluster
+        return df_cluster, pd.DataFrame(erros, columns=['id_modulo','analito','erro'])
