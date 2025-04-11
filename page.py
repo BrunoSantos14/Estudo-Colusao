@@ -1,6 +1,7 @@
 import streamlit as st
 from utils import Data
 from estudo import Estudo
+import re
 
 class Page():
     def __init__(self):
@@ -95,7 +96,12 @@ class Page():
                     for df in dfs:
                         analito = df.analito.unique()[0]
                         st.markdown(f'### {analito}:')
-                        st.dataframe(df, hide_index=True)
+
+                        encontrar_col_item = lambda x: x if re.compile(r'A[0-9]+M[0-9]+I[0-9]+').findall(x) != [] else None
+                        colunas_item = list(filter(encontrar_col_item, df.columns))
+                        
+                        colunas = ['part','grupo','regiao','sistema','eps_calculado','cluster','identico']+colunas_item
+                        st.dataframe(df[colunas], hide_index=True)
 
     def main(self):
         self.settings()

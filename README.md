@@ -46,6 +46,8 @@ Após diversas tentativas, o DBScan demostrou ser o algortimo mais adequado para
 
   ![1744300601405](image/README/1744300601405.png)
 
+  ![1744397931516](image/README/1744397931516.png)
+
 ### 4. Conclusões
 
 ---
