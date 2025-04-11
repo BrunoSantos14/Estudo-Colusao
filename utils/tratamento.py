@@ -40,9 +40,11 @@ class PreProcessamento:
         df.loc[df.mes.isin([10,11,12]), 'ano'] += 1  # Colocando itens da primeira rodada para o próximo ano
 
         # Criando a coluna item
-        df['num_item'] = df.item_ensaio.apply(lambda x: x[-1])
-        df['item'] = 'A' + df.ano.astype(str) +  \
-                     'M' + df.mes.astype(str) +  \
+        # df['num_item'] = df.item_ensaio.apply(lambda x: x[-1])
+        df['num_item'] = df.item_ensaio.map(lambda x: re.compile('\w([0-9]+)').findall(x)[-1])
+
+        df['item'] = 'A' + df.ano.astype(str) + \
+                     'M' + df.mes.astype(str) + \
                      'I' + df.num_item
 
         return df.drop(columns=['ano', 'mes', 'num_item'], axis=1)

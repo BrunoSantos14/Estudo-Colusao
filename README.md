@@ -38,6 +38,14 @@ Após diversas tentativas, o DBScan demostrou ser o algortimo mais adequado para
 
 ### 3. Resultados
 
+- 1376 módulos / analitos rodados em 2024, levando em média 1 min e 15 segundos.
+- 370 (27%) não encontraram eps via knn. Imputado para 0.02 (garante que pelo menos idêntico vai pegar)
+- 15847 casos de prováveis conluio, sendo destes 710 colas idênticas
+- Lembrando que nem sempre identico quer dizer cola... depende da natureza do material. O certo seria excluir os analitos que não precisam ser analisados, mas no momento não tenho essa informação.
+- Exemplo Bioquímica Glicose com 12 clusters encontrados, sendo 1 desse composto por colas não idênticas
+
+  ![1744300601405](image/README/1744300601405.png)
+
 ### 4. Conclusões
 
 ---
