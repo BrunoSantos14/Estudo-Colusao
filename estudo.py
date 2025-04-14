@@ -65,11 +65,14 @@ class Estudo:
                         df_cluster = cola.aplicar_modelo(eps = 0.02)
 
                     dic[modulo].append(self.__merges(df_cluster))
+            
+            if len(erros) > 0:
+                dic['erros'] = pd.DataFrame(erros, columns=['id_modulo','analito','erro'])
 
-        else:
-            return None
+            return dic
+        
+        return None
 
-        return dic, pd.DataFrame(erros, columns=['id_modulo','analito','erro'])
     
 
     def __merges(self, df: pd.DataFrame) -> pd.DataFrame:
