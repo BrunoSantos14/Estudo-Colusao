@@ -36,17 +36,27 @@ Dado que o desafio é agrupar dados e trata-se de uma modelagem não supervision
 
 Após diversas tentativas, o DBScan demostrou ser o algortimo mais adequado para agrupar os dados. A maior dificuldade foi determinar o valor ótimo para o parâmetro EPS. Se o valor for muito alto, o algoritmo pode recomendar vários participantes em conluio, incluindo casos sem evidências suficientes. Se for muito baixo, apenas colas idênticas são encontradas. Como a verificação dos grupos em colusão exige verificação manual, analisando a natureza do ensaio, a localização geográfica dos participantes envolvidos e se são do mesmo grupo empresarial, é essencial que o modelo identifique apenas casos altamente confiáveis. Caso contrário, um volume alto de falsos positivos pode gerar demandas desnecessárias para outros setores da empresa. Observa-se que colusões geralmente são idênticas ou com pequenas variações, tipicamente de uma ou duas casas decimais.
 
+Para encontrar de forma automatizada o valor para o eps, foi utilizada a técnica do k-Neares Neighbors, que analisa a distâmcia média entre os pontos mais próximos. Entretanto, para alguns exames os filtros aplicados dificultam a definição de um valor. Nesses casos, foi estabelecido o valor padrão eps = 0,02, garantindo que, ao menos, o modelo vá encontrar colusões idênticas, sem prejudicar o estudo.
+
+Além disso, foi desenvolvida uma interface gráfica utilizando o Streamlit, permitindo ao usuário realizar estudos especificando módulos e analitos de forma dinâmica. Contudo, a execução do estudo para todos os módulos e analitos de um ano cumulativo demanda grande capacidade de processamento, o que pode comprometer a aplicação web. Para mitigar esse problema, existe uma versão do script que retorna os dados via dicionário Python, facilitando a exportação para planilhas Excel para análises complementares.
+
 ### 3. Resultados
 
-- 1376 módulos / analitos rodados em 2024, levando em média 1 min e 15 segundos.
-- 370 (27%) não encontraram eps via knn. Imputado para 0.02 (garante que pelo menos idêntico vai pegar)
-- 15847 casos de prováveis conluio, sendo destes 710 colas idênticas
+- 1376 exames rodados em 2024, levando em média 1 min e 15 segundos.
+- 329 módulos buscados. Encontrado colas em 291
+- 370 exames (27%) não encontraram eps via knn. Imputado para 0.02 (garante que pelo menos idêntico vai pegar)
+- 711 exames  (52%) encontrados grupo(s) com suspeitos de colusão. Destes, 86 (12%) encontraram colas idênticas
+- Foram identificados 1570 grupos de colusão em 329 módulos / 1376 exames.
+- 15847 casos de encontrados no algoritmo, sendo destes 710 colas idênticas
 - Lembrando que nem sempre identico quer dizer cola... depende da natureza do material. O certo seria excluir os analitos que não precisam ser analisados, mas no momento não tenho essa informação.
 - Exemplo Bioquímica Glicose com 12 clusters encontrados, sendo 1 desse composto por colas não idênticas
 
   ![1744300601405](image/README/1744300601405.png)
 
   ![1744397931516](image/README/1744397931516.png)
+
+  ![1745610774423](image/README/1745610774423.png)
+- Priorizar módulos para investigação manual.
 
 ### 4. Conclusões
 

@@ -36,7 +36,8 @@ class Estudo:
                         erros.append((modulo, analito, e))
                         df_cluster = cola.aplicar_modelo(eps = 0.02)
 
-                    dic[modulo].append(self.__merges(df_cluster))
+                    if len(df_cluster) > 0:
+                        dic[modulo].append(self.__merges(df_cluster))
             
             if len(erros) > 0:
                 dic['erros'] = pd.DataFrame(erros, columns=['id_modulo','analito','erro'])
@@ -50,13 +51,15 @@ class Estudo:
         # Merge parceiros
         df = df.merge(
             self.parceiros,
-            on = 'part'
+            on = 'part',
+            how='left'
         )
 
         # Merge modulos
         df = df.merge(
             self.modulos,
-            on = 'id_modulo'
+            on = 'id_modulo',
+            how='left'
         )
 
         return df
