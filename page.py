@@ -72,7 +72,7 @@ class Page():
             modulo = [int(i) for i in st.session_state.id_modulo] if st.session_state.id_modulo else None
 
             with st.spinner("Carregando...", show_time=True):
-                dic, erros = Estudo(
+                dic = Estudo(
                     ano=st.session_state.ano,
                     id_modulo=modulo,
                     analito=None,

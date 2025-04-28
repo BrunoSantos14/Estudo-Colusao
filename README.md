@@ -42,23 +42,45 @@ Além disso, foi desenvolvida uma interface gráfica utilizando o Streamlit, per
 
 ### 3. Resultados
 
-- 1376 exames rodados em 2024, levando em média 1 min e 15 segundos.
-- 329 módulos buscados. Encontrado colas em 291
-- 370 exames (27%) não encontraram eps via knn. Imputado para 0.02 (garante que pelo menos idêntico vai pegar)
-- 711 exames  (52%) encontrados grupo(s) com suspeitos de colusão. Destes, 86 (12%) encontraram colas idênticas
-- Foram identificados 1570 grupos de colusão em 329 módulos / 1376 exames.
-- 15847 casos de encontrados no algoritmo, sendo destes 710 colas idênticas
-- Lembrando que nem sempre identico quer dizer cola... depende da natureza do material. O certo seria excluir os analitos que não precisam ser analisados, mas no momento não tenho essa informação.
-- Exemplo Bioquímica Glicose com 12 clusters encontrados, sendo 1 desse composto por colas não idênticas
+O conjunto de dados de 2024 é composto por 1.426.101 dados, onde foram investigados 3.690 participantes que responderam 1.376 exames, distribuídos em 329 módulos. O tempo de processamento do algoritmo de clusterização DBScan para realizar todo o estudo foi em média 1 minuto e 20 segundos.
 
-  ![1744300601405](image/README/1744300601405.png)
+Dos 329 módulos analisados, foram identificados possíveis conluios em 291 deles, o que mostra a abrangência do modelo aplicado. Um dos desafios foi a determinação automática do parâmetro eps via k-Neares Neighbors. Em 27% dos exames, a técnica não conseguiu identificar um valor adequado, levando a adoção do valor fixo  de eps = 0,02, conforme definido na metodologia. Ao final da análise, 52% dos exames apresentaram pelo menos um grupo com suspeita de colusão. Destes, 12% identificaram colas idênticas, o que reforça a importância de se investigar esses casos com maior profundidade. No total, foram formados 1.570 grupos suspeitos. A localização do laboratório (unidade federativa ou país dependendo da nacionalidade)  e o grupo empresarial (caso haja) foram informações adicionais para auxiliar na tomada de decisão final.
 
-  ![1744397931516](image/README/1744397931516.png)
+![1745840683042](image/README/1745840683042.png)
 
-  ![1745610774423](image/README/1745610774423.png)
-- Priorizar módulos para investigação manual.
+A imagem acima mostra o exemplo do id_modulo 58 para o analito Glicose, onde 12 grupos foram encontrados, sendo 1 deste apresentando cola não idêntica: o cluster 4 é composto por participantes do mesmo Estado brasileiro e ambos não pertencem a nenhum grupo empresarial, o que pode ser indício de tentativa de disfarce por parte dos participantes. O número de participação e o nome do grupo empresarial foi codificado para essa apresentação.
+
+![1745842118790](image/README/1745842118790.png)
+
+Já para o analito CPK, o modelo encontrou colusão não idêntica entre dois participantes do mesmo Estado e grupo empresarial. Note que 6 itens não idênticos apresentam resultados similares, inclusive o participante da primeira linha apresenta constantemente resultados ligeriamente superiores (0,01 ou 0,02 a mais que o segundo participante), o que pode ser mais um indício de tentativa de padronização dos resultados entre as partes.
+
+![1745841539329](image/README/1745841539329.png)
+
+Exemplo de módulos analisados pela interface gráfica criada pelo Streamlit, também com participantes e grupos codificados. Note que o cluster 4 para o ensaio Albumina apresenta um cluster não idêntico, mas com participantes de Estados e grupos empresariais distintos.
+
+![1745610774423](image/README/1745610774423.png)
+
+Para priorização de módulos para investigação manual, a gráfico de barras acima evidencia os 10 módulos que tiveram mais clusters (grupos suspeitos) encontrados.
+
+Vale destacar que, embora a presença de valores similares entre participantes seja forte indício de conluio, isso não implica necessariamente fraude, pois pode havar justificativas técnicas ou características do material analisado que expliquem a semelhança. Idealmente, exames cuja natureza não permite inferência por similaridade deveriam ser excluídos do estudo, mas no momento essas informações ainda não foram mapeadas e disponibilizadas.
 
 ### 4. Conclusões
+
+Este estudo propôs uma abordagem baseada em modelagem não supervisionada, utilizando o DBScan para identificação de possíveis colusões entre participantes nos programas de Ensaio de Proficiência da Controllab. A metodologia desenvolvida demonstrou eficiência na detencção de padrões suspeitos, considerando tanto colusões idênticas quanto similares. O pre processamento foi essencial na qualidade dos resultados, exigindo participação mínima no ano cumulativo, substituição de valores faltantes e normalização dos dados. A detecção automática do parâmetro eps proporcionou maior precisão e versatilidade na automação, mesmo que em 27% dos casos tenha sido necessário utilizar um valor padrão para garantir que grupos pudessem ser encontrados.
+
+Houve a tentativa de fazer o estudo utilizando o K-Means, porém sem sucesso já que não é possível definir o número de clusters de forma prévia (parâmetro necessário para esse modelo). Também foi de interesse colocar a região e grupo empresarial como critérios para a clusterização, utilizando o conceito de colunas dummys. Porém, notou-se perda de capacidade para identifação dos grupos em conluio, o que dificultou sua aplicação.
+
+Os resultados presentes nesse arquivo revelam potencial aplicação desse estudo na rotina da empresa, dando suporte às atividades de auditoria e garantia da integridade das avaliações laboratoriais do controle externo da qualidade. O modelo se mostrou sensível tanto para resultados idênticos quanto para casos com pequenas variações, o que amplia sua aplicação em diferentes contextos de exames..
+
+Contudo, o estudo revelou limitações, como a necessidade de informações adicionais sobre quais analitos de fato precisam e devem ser investigados, para mitigar a quantidade de falso positivo decorrente das características do material. Como próximos passos, recomenda-se:
+
+* Listagem prévia de analitos recomendados para identificação de colusão;
+* Otimização de tempo para processamento do algoritmo;
+
+* Incorporar região e grupo como critérios para clusterização;
+* O desenvolvimento de filtros de priorização automática, com base em características como a repetição de participantes em múltiplos clusters;
+
+A metodologia proposta representa uma contribuição relevante para o monitoramento de possíveis colusões em Ensaios de Proficiência, oferecendo ganhos de eficiência e confiabilidade no processo de análise. O estudo está de acordo com as diretrizes da empresa, que procura contribuir para melhorar e garantir a qualidade das análises laboratorias do Brasil e do mundo.
 
 ---
 

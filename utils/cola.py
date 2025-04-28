@@ -13,7 +13,7 @@ class Cola:
 
     def cola_identica(self) -> pd.DataFrame:
         df = self.df.reset_index()
-        df = df[df.drop('part', axis=1).duplicated(keep=False)]
+        df = df[df.drop(['part','sistema'], axis=1).duplicated(keep=False)]
 
         # df = df.copy()
         # df['part'] = df['part'].astype(str)

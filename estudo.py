@@ -3,8 +3,6 @@ from utils import PreProcessamento
 from utils import Data
 import pandas as pd
 
-
-
 class Estudo:
     def __init__(self, ano: int, id_modulo: list[int]=None, analito: list[str]=None):
 
