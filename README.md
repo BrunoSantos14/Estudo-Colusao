@@ -58,7 +58,7 @@ Exemplo de módulos analisados pela interface gráfica criada pelo Streamlit, ta
 
 ![1745841539329](image/README/1745841539329.png)
 
-Para priorização de módulos para investigação manual, a gráfico de barras acima evidencia os 10 módulos que tiveram mais clusters (grupos suspeitos) encontrados.
+Para priorização de módulos para investigação manual, a gráfico de barras abaixo evidencia os 10 módulos que tiveram mais clusters (grupos suspeitos) encontrados.
 
 ![1745610774423](image/README/1745610774423.png)
 
