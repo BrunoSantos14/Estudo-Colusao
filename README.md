@@ -36,7 +36,7 @@ Dado que o desafio é agrupar dados e trata-se de uma modelagem não supervision
 
 Após diversas tentativas, o DBScan demostrou ser o algortimo mais adequado para agrupar os dados. A maior dificuldade foi determinar o valor ótimo para o parâmetro EPS. Se o valor for muito alto, o algoritmo pode recomendar vários participantes em conluio, incluindo casos sem evidências suficientes. Se for muito baixo, apenas colas idênticas são encontradas. Como a verificação dos grupos em colusão exige verificação manual, analisando a natureza do ensaio, a localização geográfica dos participantes envolvidos e se são do mesmo grupo empresarial, é essencial que o modelo identifique apenas casos altamente confiáveis. Caso contrário, um volume alto de falsos positivos pode gerar demandas desnecessárias para outros setores da empresa. Observa-se que colusões geralmente são idênticas ou com pequenas variações, tipicamente de uma ou duas casas decimais.
 
-Para encontrar de forma automatizada o valor para o eps, foi utilizada a técnica do k-Neares Neighbors, que analisa a distâmcia média entre os pontos mais próximos. Entretanto, para alguns exames os filtros aplicados dificultam a definição de um valor. Nesses casos, foi estabelecido o valor padrão eps = 0,02, garantindo que, ao menos, o modelo vá encontrar colusões idênticas, sem prejudicar o estudo.
+Para encontrar de forma automatizada o valor para o eps, foi utilizada a técnica do k-Nearest Neighbors, que analisa a distâmcia média entre os pontos mais próximos. Entretanto, para alguns exames os filtros aplicados dificultam a definição de um valor. Nesses casos, foi estabelecido o valor padrão eps = 0,02, garantindo que, ao menos, o modelo vá encontrar colusões idênticas, sem prejudicar o estudo.
 
 Além disso, foi desenvolvida uma interface gráfica utilizando o Streamlit, permitindo ao usuário realizar estudos especificando módulos e analitos de forma dinâmica. Contudo, a execução do estudo para todos os módulos e analitos de um ano cumulativo demanda grande capacidade de processamento, o que pode comprometer a aplicação web. Para mitigar esse problema, existe uma versão do script que retorna os dados via dicionário Python, facilitando a exportação para planilhas Excel para análises complementares.
 
@@ -44,23 +44,23 @@ Além disso, foi desenvolvida uma interface gráfica utilizando o Streamlit, per
 
 O conjunto de dados de 2024 é composto por 1.426.101 dados, onde foram investigados 3.690 participantes que responderam 1.376 exames, distribuídos em 329 módulos. O tempo de processamento do algoritmo de clusterização DBScan para realizar todo o estudo foi em média 1 minuto e 20 segundos.
 
-Dos 329 módulos analisados, foram identificados possíveis conluios em 291 deles, o que mostra a abrangência do modelo aplicado. Um dos desafios foi a determinação automática do parâmetro eps via k-Neares Neighbors. Em 27% dos exames, a técnica não conseguiu identificar um valor adequado, levando a adoção do valor fixo  de eps = 0,02, conforme definido na metodologia. Ao final da análise, 52% dos exames apresentaram pelo menos um grupo com suspeita de colusão. Destes, 12% identificaram colas idênticas, o que reforça a importância de se investigar esses casos com maior profundidade. No total, foram formados 1.570 grupos suspeitos. A localização do laboratório (unidade federativa ou país dependendo da nacionalidade)  e o grupo empresarial (caso haja) foram informações adicionais para auxiliar na tomada de decisão final.
+Dos 329 módulos analisados, foram identificados possíveis conluios em 291 deles, o que mostra a abrangência do modelo aplicado. Um dos desafios foi a determinação automática do parâmetro eps via k-Nearest Neighbors. Em 27% dos exames, a técnica não conseguiu identificar um valor adequado, levando a adoção do valor fixo  de eps = 0,02, conforme definido na metodologia. Ao final da análise, 52% dos exames apresentaram pelo menos um grupo com suspeita de colusão. Destes, 12% identificaram colas idênticas, o que reforça a importância de se investigar esses casos com maior profundidade. No total, foram formados 1.570 grupos suspeitos. A localização do laboratório (unidade federativa ou país dependendo da nacionalidade)  e o grupo empresarial (caso haja) foram informações adicionais para auxiliar na tomada de decisão final.
+
+A figura abaixo mostra o exemplo do id_modulo 58 para o analito Glicose, onde 12 grupos foram encontrados, sendo 1 deste apresentando cola não idêntica: o cluster 4 é composto por participantes do mesmo Estado brasileiro e ambos não pertencem a nenhum grupo empresarial, o que pode ser indício de tentativa de disfarce por parte dos participantes. O número de participação e o nome do grupo empresarial foi codificado para essa apresentação.
 
 ![1745840683042](image/README/1745840683042.png)
 
-A imagem acima mostra o exemplo do id_modulo 58 para o analito Glicose, onde 12 grupos foram encontrados, sendo 1 deste apresentando cola não idêntica: o cluster 4 é composto por participantes do mesmo Estado brasileiro e ambos não pertencem a nenhum grupo empresarial, o que pode ser indício de tentativa de disfarce por parte dos participantes. O número de participação e o nome do grupo empresarial foi codificado para essa apresentação.
+Já para o analito CPK, o modelo encontrou colusão não idêntica entre dois participantes do mesmo Estado e grupo empresarial. Pela imagem abaixo, note que 6 itens não idênticos apresentam resultados similares, inclusive o participante da primeira linha apresenta constantemente resultados ligeriamente superiores (0,01 ou 0,02 a mais que o segundo participante), o que pode ser mais um indício de tentativa de padronização dos resultados entre as partes.
 
 ![1745842118790](image/README/1745842118790.png)
 
-Já para o analito CPK, o modelo encontrou colusão não idêntica entre dois participantes do mesmo Estado e grupo empresarial. Note que 6 itens não idênticos apresentam resultados similares, inclusive o participante da primeira linha apresenta constantemente resultados ligeriamente superiores (0,01 ou 0,02 a mais que o segundo participante), o que pode ser mais um indício de tentativa de padronização dos resultados entre as partes.
+Exemplo de módulos analisados pela interface gráfica criada pelo Streamlit, também com participantes e grupos codificados. Note que o cluster 4 para o ensaio Albumina apresenta um cluster não idêntico, mas com participantes de Estados e grupos empresariais distintos.
 
 ![1745841539329](image/README/1745841539329.png)
 
-Exemplo de módulos analisados pela interface gráfica criada pelo Streamlit, também com participantes e grupos codificados. Note que o cluster 4 para o ensaio Albumina apresenta um cluster não idêntico, mas com participantes de Estados e grupos empresariais distintos.
+Para priorização de módulos para investigação manual, a gráfico de barras acima evidencia os 10 módulos que tiveram mais clusters (grupos suspeitos) encontrados.
 
 ![1745610774423](image/README/1745610774423.png)
-
-Para priorização de módulos para investigação manual, a gráfico de barras acima evidencia os 10 módulos que tiveram mais clusters (grupos suspeitos) encontrados.
 
 Vale destacar que, embora a presença de valores similares entre participantes seja forte indício de conluio, isso não implica necessariamente fraude, pois pode havar justificativas técnicas ou características do material analisado que expliquem a semelhança. Idealmente, exames cuja natureza não permite inferência por similaridade deveriam ser excluídos do estudo, mas no momento essas informações ainda não foram mapeadas e disponibilizadas.
 
@@ -76,7 +76,6 @@ Contudo, o estudo revelou limitações, como a necessidade de informações adic
 
 * Listagem prévia de analitos recomendados para identificação de colusão;
 * Otimização de tempo para processamento do algoritmo;
-
 * Incorporar região e grupo como critérios para clusterização;
 * O desenvolvimento de filtros de priorização automática, com base em características como a repetição de participantes em múltiplos clusters;
 
